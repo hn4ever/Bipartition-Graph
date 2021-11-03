@@ -1,65 +1,70 @@
 
 def possible_bipartition(dislikes)
-  return true if dislikes.empty?
 
-  group1 = Hash.new(0)
-  group2 = Hash.new(0)
-  dogs_checked = []
 
-  i = 0
+    # color = Array.new(dislikes.size, nil) # each dog will have a specific color
 
-  while i < dislikes.length
-    if dislikes[i].empty?
-      group1[i] += 1
-      dogs_checked << dislikes[i]
-    else
-      dislikes[i].each do |hated_dog|
-        if group1.key?(hated_dog)
-          group2[i] += 1
-          dogs_checked << dislikes[i]
-        elsif group2.key?(hated_dog)
-          group1[i] += 1
-          dogs_checked << dislikes[i]
-        elsif group1.key?(hated_dog) && group1.key?(i)
-          return false
-        elsif group2.key?(hated_dog) && group2.key?(i)
-          return false
-        else
-          if group1.key?(i)
-            group2[hated_dog] += 1
-          elsif group2.key?(i)
-            group1[hated_dog] += 1
-          else
-            group1[i] += 1
-            group2[hated_dog] += 1
-          end
+    # dislikes.each_with_index do |dog, i|
+    #     if color[i].nil?
+    #         color[i] = 0
+    #         if !dog.empty?
+    #             dog.each do |enemies|
+    #                 stack = [] # first dog is dog 0
+    #                 stack << 0
+    #                 until stack.empty?
+    #                     current = stack.pop
+    #                     dislikes[current].each do |enemy|
+    #                         if color[enemy].nil?
+    #                             color[enemy] = -color[i]
+    #                             stack << dislikes[enemy]
+    #                         elsif color[enemy] == color[i]
+    #                             false
+    #                         end
+    #                     end
+    #                 end
+    #             end
+    #         end
+    #     end
+    # end
+    # true
+
+    # color the dog green = 1
+    # dfs if it's not colored
+    #   color the different color color[enemy] = - color[dog]
+    # if it's colord and the color is the opposite and colored, continue
+    # if color the same then return false
+
+    color = Array.new(dislikes.size, nil)
+
+    dislikes.each_with_index do |enemies, i|
+        if !color[i].nil?
+            stack = [i]
+            color[i] = 1
+            until stack.empty?
+                if !enemies.empty?
+                    enemies.each do |enemy|
+                        if color[ememy].nil? #color first then add to stack?
+                            color[enemy] = -color[i]
+                            stack << enemy
+                        else
+                            return false if color[enemy] ==  color[i]
+                        end
+                    end
+                end
+            end
         end
-      end
     end
-    i += 1
-  end
-
-
-  if (group1.length + group2.length) == dislikes.length
-    return true
-  else
-    return false
-  end
-  
-  if group1.any?{|k,v| v > 1}
-    return false
-  end
-
-  if group2.any?{|k,v| v > 1}
-    return false
-  end
-
-  return true
-
-  # another approach
-
-  # check if dog is hated or not
-  # check if the hated dogs are already in two groups
-  # if they are
-
+    true
 end
+
+
+dislikes = [ [3, 6],
+[2, 5],
+[1, 3],
+[0, 2],
+[5],
+[1, 4],
+[0]
+]
+
+puts possible_bipartition(dislikes)
